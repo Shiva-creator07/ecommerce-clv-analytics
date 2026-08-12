@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ecommerce-clv-postgres
+    environment:
+      POSTGRES_USER: clv_user
+      POSTGRES_PASSWORD: clv_password
+      POSTGRES_DB: ecommerce_clv
+    ports:
+      - "5433:5432"
+    volumes:
+      - clv_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clv_user -d ecommerce_clv"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  clv_pgdata:
