@@ -50,3 +50,27 @@ gross_profit   = order_items.price - estimated_cost
 - Category-level ranges are informed estimates, not sourced from Olist or
   Brazilian market data.
 - Freight cost is tracked separately and treated as a distinct cost line.
+
+---
+
+# RFM Segmentation — Methodology Note
+
+## Frequency scoring: why NTILE was replaced with explicit bands
+
+Olist is dominated by one-time buyers: ~97% of customers (92,102 of ~94,990)
+placed exactly one order. Using `NTILE(5)` to score frequency — as is
+standard in most RFM tutorials — forces that single tied group to be split
+arbitrarily across all 5 score buckets, since NTILE must fill each bucket
+evenly regardless of ties. This artificially inflated "frequent buyer"
+segments (Champions: 14,764, Loyal Customers: 19,871) despite most of those
+customers having ordered only once.
+
+**Fix:** frequency is instead scored using explicit, business-meaningful
+bands (1 order = score 1, 2 orders = score 2, ... 5+ orders = score 5).
+Recency and Monetary remain NTILE-scored since they are continuous values
+without this tie-clustering problem.
+
+**Result after fix:** Champions dropped to 34 customers (avg spend ₹712,
+~3x the next segment) — a small, high-value group consistent with the
+dataset's known low repeat-purchase rate, rather than an artifact of
+tie-breaking.
