@@ -196,3 +196,40 @@ mismatch_df = cat_df.reindex(
     cat_df["rank_gap"].abs().sort_values(ascending=False).index
 )[["category", "total_revenue", "total_gross_profit", "avg_gross_margin_pct", "revenue_rank", "profit_rank", "rank_gap"]]
 st.dataframe(mismatch_df, use_container_width=True, hide_index=True)
+
+st.divider()
+
+# ============================================================
+# Retention Funnel
+# ============================================================
+st.subheader("Customer Retention Funnel")
+
+funnel_query = """
+SELECT
+    CASE
+        WHEN frequency = 1 THEN '1. One-time buyers'
+        WHEN frequency IN (2, 3) THEN '2. Repeat (2-3 orders)'
+        ELSE '3. Loyal (4+ orders)'
+    END AS retention_stage,
+    COUNT(*) AS customers
+FROM vw_customer_rfm
+GROUP BY retention_stage
+ORDER BY retention_stage;
+"""
+funnel_df = run_query(funnel_query)
+
+fig_funnel = go.Figure(go.Funnel(
+    y=funnel_df["retention_stage"],
+    x=funnel_df["customers"],
+    marker=dict(color=["#4C78A8", "#72B7B2", "#54A24B"]),
+))
+fig_funnel.update_layout(margin=dict(t=10, b=10))
+st.plotly_chart(fig_funnel, use_container_width=True)
+
+st.caption(
+    "Consistent with the RFM analysis: ~97% of Olist customers are one-time buyers. "
+    "This is a known characteristic of the dataset, not a data quality issue."
+)
+
+st.divider()
+st.caption("Built by Shivansh Mishra · Data: Olist Brazilian E-Commerce (Kaggle) · Cost data is synthetic — see docs/cost_assumptions.md")
