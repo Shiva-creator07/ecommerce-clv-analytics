@@ -74,3 +74,30 @@ without this tie-clustering problem.
 ~3x the next segment) — a small, high-value group consistent with the
 dataset's known low repeat-purchase rate, rather than an artifact of
 tie-breaking.
+
+---
+
+# CLV Prediction — Methodology Note
+
+## Frequency extrapolation guardrails
+
+An early version of predicted CLV annualized purchase frequency as
+`total_orders / (days_between_first_and_last_order / 365)`. This broke
+badly for customers whose 2 orders happened to be placed close together in
+time (in one case, 1 second apart): the tiny denominator inflated annualized
+frequency into the hundreds, producing a predicted 2-year CLV over ₹2.1
+million from a customer with ~₹2,930 in actual historical profit.
+
+A simple frequency cap (24/year) reduced the worst outliers but didn't fix
+the root problem: with only 2 data points close together in time, there
+isn't enough signal to trust any extrapolated annual rate at all.
+
+**Fix:** frequency extrapolation is now only attempted when a customer has
+**3+ orders AND at least 60 observed days** between first and last order.
+Customers who don't meet this bar (including all one-time buyers) fall back
+to a conservative 1 purchase/year default. The 24/year cap remains as a
+final backstop for edge cases.
+
+This is a good example of why sparse, real-world transaction data needs
+guardrails before naive extrapolation formulas — a lesson that also came up
+in the RFM frequency scoring (see above).
