@@ -161,3 +161,38 @@ fig_hist.update_layout(
 )
 st.plotly_chart(fig_hist, use_container_width=True)
 st.caption("Top 1% of customers by predicted CLV excluded from this view for readability.")
+
+st.divider()
+
+# ============================================================
+# Category Profitability
+# ============================================================
+st.subheader("Category Profitability")
+
+cat_query = """
+SELECT category, total_revenue, total_gross_profit, avg_gross_margin_pct,
+       revenue_rank, profit_rank, (revenue_rank - profit_rank) AS rank_gap
+FROM vw_category_profitability
+ORDER BY total_gross_profit DESC
+LIMIT 15;
+"""
+cat_df = run_query(cat_query)
+
+fig_cat = go.Figure(go.Bar(
+    x=cat_df["total_gross_profit"], y=cat_df["category"],
+    orientation="h", marker_color="#54A24B",
+))
+fig_cat.update_layout(
+    title="Top 15 Categories by Gross Profit",
+    xaxis_title="Gross Profit (₹)", yaxis_title="",
+    yaxis=dict(autorange="reversed"),
+    margin=dict(t=40, b=10),
+    height=500,
+)
+st.plotly_chart(fig_cat, use_container_width=True)
+
+st.markdown("**Revenue vs. Profit Rank Mismatch** — categories where high revenue doesn't mean high profit")
+mismatch_df = cat_df.reindex(
+    cat_df["rank_gap"].abs().sort_values(ascending=False).index
+)[["category", "total_revenue", "total_gross_profit", "avg_gross_margin_pct", "revenue_rank", "profit_rank", "rank_gap"]]
+st.dataframe(mismatch_df, use_container_width=True, hide_index=True)
