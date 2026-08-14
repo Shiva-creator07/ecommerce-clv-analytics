@@ -96,7 +96,7 @@ fig_trend.update_layout(
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     margin=dict(t=10, b=10),
 )
-st.plotly_chart(fig_trend, use_container_width=True)
+st.plotly_chart(fig_trend, width="stretch")
 
 st.divider()
 
@@ -120,7 +120,7 @@ with col_left:
         xaxis_title="Segment", yaxis_title="Customers",
         margin=dict(t=40, b=10),
     )
-    st.plotly_chart(fig_count, use_container_width=True)
+    st.plotly_chart(fig_count, width="stretch")
 
 with col_right:
     fig_clv = go.Figure(go.Bar(
@@ -132,9 +132,9 @@ with col_right:
         xaxis_title="Segment", yaxis_title="Avg CLV (₹)",
         margin=dict(t=40, b=10),
     )
-    st.plotly_chart(fig_clv, use_container_width=True)
+    st.plotly_chart(fig_clv, width="stretch")
 
-st.dataframe(rfm_df, use_container_width=True, hide_index=True)
+st.dataframe(rfm_df, width="stretch", hide_index=True)
 
 st.divider()
 
@@ -159,7 +159,7 @@ fig_hist.update_layout(
     yaxis_title="Number of Customers",
     margin=dict(t=10, b=10),
 )
-st.plotly_chart(fig_hist, use_container_width=True)
+st.plotly_chart(fig_hist, width="stretch")
 st.caption("Top 1% of customers by predicted CLV excluded from this view for readability.")
 
 st.divider()
@@ -189,13 +189,13 @@ fig_cat.update_layout(
     margin=dict(t=40, b=10),
     height=500,
 )
-st.plotly_chart(fig_cat, use_container_width=True)
+st.plotly_chart(fig_cat, width="stretch")
 
 st.markdown("**Revenue vs. Profit Rank Mismatch** — categories where high revenue doesn't mean high profit")
 mismatch_df = cat_df.reindex(
     cat_df["rank_gap"].abs().sort_values(ascending=False).index
 )[["category", "total_revenue", "total_gross_profit", "avg_gross_margin_pct", "revenue_rank", "profit_rank", "rank_gap"]]
-st.dataframe(mismatch_df, use_container_width=True, hide_index=True)
+st.dataframe(mismatch_df, width="stretch", hide_index=True)
 
 st.divider()
 
@@ -224,7 +224,7 @@ fig_funnel = go.Figure(go.Funnel(
     marker=dict(color=["#4C78A8", "#72B7B2", "#54A24B"]),
 ))
 fig_funnel.update_layout(margin=dict(t=10, b=10))
-st.plotly_chart(fig_funnel, use_container_width=True)
+st.plotly_chart(fig_funnel, width="stretch")
 
 st.caption(
     "Consistent with the RFM analysis: ~97% of Olist customers are one-time buyers. "
