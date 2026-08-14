@@ -135,3 +135,29 @@ with col_right:
     st.plotly_chart(fig_clv, use_container_width=True)
 
 st.dataframe(rfm_df, use_container_width=True, hide_index=True)
+
+st.divider()
+
+# ============================================================
+# CLV Distribution
+# ============================================================
+st.subheader("Predicted CLV Distribution")
+
+clv_dist_query = "SELECT predicted_clv_2yr FROM vw_customer_clv WHERE predicted_clv_2yr > 0;"
+clv_dist_df = run_query(clv_dist_query)
+
+clv_cap = clv_dist_df["predicted_clv_2yr"].quantile(0.99)
+clv_dist_filtered = clv_dist_df[clv_dist_df["predicted_clv_2yr"] <= clv_cap]
+
+fig_hist = go.Figure(go.Histogram(
+    x=clv_dist_filtered["predicted_clv_2yr"],
+    nbinsx=50,
+    marker_color="#E45756",
+))
+fig_hist.update_layout(
+    xaxis_title="Predicted 2yr CLV (₹)",
+    yaxis_title="Number of Customers",
+    margin=dict(t=10, b=10),
+)
+st.plotly_chart(fig_hist, use_container_width=True)
+st.caption("Top 1% of customers by predicted CLV excluded from this view for readability.")
