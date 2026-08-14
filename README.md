@@ -68,7 +68,31 @@ Two real bugs surfaced during development, both from a common root cause — **n
 - **Dashboard:** Streamlit, Plotly
 - **Data source:** [Olist Brazilian E-Commerce dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
 
-## Project structur## Running locally
+## Project structure
+ecommerce-clv-analytics/
+├── dashboard/
+│ └── app.py
+├── data/
+│ └── raw/
+├── docs/
+│ └── cost_assumptions.md
+├── scripts/
+│ ├── load_data.py
+│ ├── generate_costs.py
+│ ├── load_data_cloud.py
+│ ├── generate_costs_cloud.py
+│ └── run_sql_file.py
+├── sql/
+│ ├── 01_schema.sql
+│ ├── 02_product_costs_schema.sql
+│ ├── 03_profitability_views.sql
+│ ├── 04_rfm_segmentation.sql
+│ ├── 05_clv.sql
+│ ├── 06_rfm_clv_summary.sql
+│ └── 07_product_profitability.sql
+├── docker-compose.yml
+└── requirements.txt
+## Running locally
 
 **1. Clone and set up Python environment**
 
