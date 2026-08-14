@@ -97,3 +97,41 @@ fig_trend.update_layout(
     margin=dict(t=10, b=10),
 )
 st.plotly_chart(fig_trend, use_container_width=True)
+
+st.divider()
+
+# ============================================================
+# RFM Segment Breakdown
+# ============================================================
+st.subheader("Customer Segments (RFM) & Lifetime Value")
+
+rfm_query = "SELECT * FROM vw_rfm_clv_summary ORDER BY avg_predicted_clv_2yr DESC;"
+rfm_df = run_query(rfm_query)
+
+col_left, col_right = st.columns(2)
+
+with col_left:
+    fig_count = go.Figure(go.Bar(
+        x=rfm_df["rfm_segment"], y=rfm_df["num_customers"],
+        marker_color="#4C78A8",
+    ))
+    fig_count.update_layout(
+        title="Customers per Segment",
+        xaxis_title="Segment", yaxis_title="Customers",
+        margin=dict(t=40, b=10),
+    )
+    st.plotly_chart(fig_count, use_container_width=True)
+
+with col_right:
+    fig_clv = go.Figure(go.Bar(
+        x=rfm_df["rfm_segment"], y=rfm_df["avg_predicted_clv_2yr"],
+        marker_color="#72B7B2",
+    ))
+    fig_clv.update_layout(
+        title="Avg Predicted 2yr CLV per Segment",
+        xaxis_title="Segment", yaxis_title="Avg CLV (₹)",
+        margin=dict(t=40, b=10),
+    )
+    st.plotly_chart(fig_clv, use_container_width=True)
+
+st.dataframe(rfm_df, use_container_width=True, hide_index=True)
