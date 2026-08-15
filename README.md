@@ -34,6 +34,7 @@ Full writeups in docs/cost_assumptions.md.
 
 ## Project structure
 
+```
 ecommerce-clv-analytics/
 +-- dashboard/app.py
 +-- data/raw/
@@ -42,6 +43,7 @@ ecommerce-clv-analytics/
 +-- sql/
 +-- docker-compose.yml
 +-- requirements.txt
+```
 ## Running locally
 
 1. Clone repo, create venv, `pip install -r requirements.txt`
