@@ -33,6 +33,7 @@ Full writeups in docs/cost_assumptions.md.
 - Data source: Olist Brazilian E-Commerce dataset (Kaggle)
 
 ## Project structure
+
 ecommerce-clv-analytics/
 +-- dashboard/app.py
 +-- data/raw/
